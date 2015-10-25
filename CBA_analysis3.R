@@ -1,5 +1,5 @@
 #Load Data
-df1 <- read.csv("~/R-tables/JL-M120_CBA.csv", header = TRUE)
+df1 <- read.csv("~/R-tables/JL-M122_CBA.csv", header = TRUE)
 
 #Reshape data
 library(reshape2)
@@ -17,12 +17,12 @@ df_mcp1 <- subset(df2, Cytokine == "MCP1")
 df_tnfa <- subset(df2, Cytokine == "TNFa")
 df_il1b <- subset(df2, Cytokine == "IL1b")
 
-#convert MFIs to concentrations
+#convert MFIs to concentrations - uses CBA calibration 03312015_KBL_Fix
 df_gmcsf$Concentration <- (df_gmcsf$Concentration * 11.771) - 394
 df_ifng$Concentration <- (df_ifng$Concentration * 18.021) - 154
 df_il4$Concentration <- (df_il4$Concentration * 29.094) -545
 df_il6$Concentration <- (df_il6$Concentration * 17.253) -287
-df_il10$Concentration <- (df_il6$Concentration * 2.0357) -117
+df_il10$Concentration <- (df_il10$Concentration * 2.0357) -117
 df_il12$Concentration <- (df_il12$Concentration * 1.384) + 44
 df_mcp1$Concentration <- (df_mcp1$Concentration * 2.6769) - 346.87
 df_tnfa$Concentration <- (df_tnfa$Concentration * 8.719) - 44
@@ -71,7 +71,16 @@ df8 <- log10(df7)
 my_palette <- colorRampPalette(c("black", "yellow", "orange", "red"))
 heatmap.2(df8, col=my_palette, trace="none", dendrogram="row", Colv="NA", symm=F, density.info="none", symkey=F,symbreaks=F, scale="none", margin=c(8,8), colsep=1:ncol(df8), rowsep=1:nrow(df8), sepcolor="white")
 
-#boxplot values
+###################################################################################################################################################################################################################
+#Converting concentrations for plotting on PRISM
+
+#long to wide formatting
+df9 <- dcast(df3, Cytokine + Rep ~ Tx, value.var="Concentration")
+write.table(df9, "C:/Users/Jason/Documents/JL-M122.txt", sep="\t")
+
+###################################################################################################################################################################################################################
+
+#Making Boxplots
 library(ggplot2)
 
 
